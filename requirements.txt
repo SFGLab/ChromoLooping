@@ -2,3 +2,5 @@ scipy
 tsp_solver
 numpy
 tqdm
+tsp_solver
+matplotlib
