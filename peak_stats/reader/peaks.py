@@ -5,12 +5,13 @@
 """
 from peak_stats.reader.read_peaks import Reader
 """
-In ASCII files from PeakSelector Z is saved in nanometer, but X and Y are saved in pixels and must be multiplied by \
-pixel size.
+In ASCII files from PeakSelector Z position is saved in nanometers, but X and Y positions are saved in pixels and have 
+to be multiplied by pixel size.
 """
 
 PIXEL_SIZE = 133
 
+# todo - add some description to functions
 
 class Peak:
 

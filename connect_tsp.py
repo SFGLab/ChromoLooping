@@ -4,7 +4,7 @@
 @author: zparteka
 """
 
-# todo - delete spanning tree and emish modeling_operations
+# todo - test tsp
 import argparse
 from modeling_scripts.modeling_operations.create_structure import load_points, save_pdb
 from modeling_scripts.modeling_operations.create_structure import run_image_tsp
@@ -13,8 +13,7 @@ from scipy.spatial.distance import squareform, pdist
 
 def main():
     parser = argparse.ArgumentParser(
-        description="From unorganized set of points (--pdb) identified from density 3D image (--image) create a polymer"
-                    " like structure fitting given 3D image using greedy TSP solution.")
+        description="From unorganized set of points (--pdb) create a polymer like structure using greedy TSP solution.")
     parser.add_argument('-p', '--pdb', help='PDB file with unorganized points', type=str, required=True)
     parser.add_argument('-o', '--optimization_steps', type=int, default=10,
                         help="Maximum number of optimization run on TSP path. default=10")

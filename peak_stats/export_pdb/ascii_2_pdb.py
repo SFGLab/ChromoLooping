@@ -3,7 +3,7 @@
 """
 @author: zparteka
 """
-from peak_stats.reader.peaks import Image, Spot
+from peak_stats.reader.peaks import Image
 from peak_stats.statistics.single_img_stats import PeakPositions
 import numpy as np
 
@@ -54,6 +54,8 @@ class Points:
         return peaksp.peaks_positions
 
     def spot_peaks(self, sigma_threshold, pixel_size=133):
+        """Apply pixel size. Default X,Y values from PeakSelector are in voxels and for Z are in nm. Also move the image
+         to the beginning of the coordinate system """
         peaks_per_spots = []
         peksp = PeakPositions(self.image)
         for spot in self.image.spots:
@@ -72,4 +74,3 @@ class Points:
         self.points[:, 0] = self.points[:, 0] - minimal[0]
         self.points[:, 1] = self.points[:, 1] - minimal[1]
         return minimal
-

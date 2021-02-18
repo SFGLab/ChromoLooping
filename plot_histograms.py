@@ -10,6 +10,7 @@ from peak_stats.statistics.single_img_stats import ImgStats
 from peak_stats.statistics.single_img_stats import PeakPositions
 
 
+# todo - describe and fill al possible parameters
 def main():
     parser = argparse.ArgumentParser(
         description="Plot histograms for sigma parameters for X, Y, Z or average sigma for spots")
@@ -59,7 +60,7 @@ def main():
             outdir = args.datafile[:-4]
         else:
             outdir = args.outdir
-        stats.plot_peak_sigma_x(x_sigma=sigmas[0],save=True, outdir=outdir)
+        stats.plot_peak_sigma_x(x_sigma=sigmas[0], save=True, outdir=outdir)
         stats.plot_peak_sigma_y_(y_sigma=sigmas[1], save=True, outdir=outdir)
         stats.plot_peak_sigma_z(sigma_z=sigmas[2], save=True, outdir=outdir)
 

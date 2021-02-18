@@ -6,6 +6,8 @@
 
 
 class Reader:
+
+    """Create a Reader object for ASCII file exported from PeakSelector"""
     head = None
     lines = None
     path = None
