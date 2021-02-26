@@ -59,7 +59,7 @@ class Points:
         peaks_per_spots = []
         peksp = PeakPositions(self.image)
         for spot in self.image.groups:
-            positions = np.array(peksp.spot_peak_positions(spot=spot, sigma_threshold=sigma_threshold))
+            positions = np.array(peksp.spot_peak_positions(group=spot, sigma_threshold=sigma_threshold))
             if len(positions) > 0:
                 positions[:, 0] *= pixel_size
                 positions[:, 1] *= pixel_size

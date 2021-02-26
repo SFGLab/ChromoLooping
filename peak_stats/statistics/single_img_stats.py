@@ -3,13 +3,12 @@
 """
 @author: zparteka
 """
-from peak_stats.reader.peaks import Image, Spot, Peak
+from peak_stats.reader.peaks import Image, Group, Peak
 from scipy.spatial import ConvexHull, Voronoi
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-import matplotlib.cm as cm
-from matplotlib.axes import Axes
+
 # Histograms global options
 Figsize = (30, 20)
 LabelFontsize = 35
@@ -30,23 +29,23 @@ class ImgStats:
     def __init__(self, image: Image):
         self.spot_count = image.spot_count()
         self.peak_count = image.peak_count()
-        self.avg_spots_sigma_xyz = self.add_spots_sigma(image)
+        self.avg_spots_sigma_xyz = self.add_groups_sigma(image)
         self.avg_peaks = self.avg_peaks_per_spot(image)
         self.photons = self.photons_in_image(image=image)
-        self.photons_per_spot = self.average_photons_per_spot(image)
+        self.photons_per_spot = self.average_photons_per_group(image)
 
     @staticmethod
-    def add_spots_sigma(image: Image):
+    def add_groups_sigma(image: Image):
         """Calculate sigma for x y and z"""
-        avg_spots_sigma_z = []
-        avg_spots_sigma_x = []
-        avg_spots_sigma_y = []
-        for spot in image.spots:
-            new_spot_stat = SpotStats(spot)
-            avg_spots_sigma_x.append(new_spot_stat.spot_avg_sigma_x_pos_full)
-            avg_spots_sigma_y.append(new_spot_stat.spot_avg_sigma_y_pos_full)
-            avg_spots_sigma_z.append(new_spot_stat.spot_avg_sigma_z)
-        return [avg_spots_sigma_x, avg_spots_sigma_y, avg_spots_sigma_z]
+        avg_groups_sigma_z = []
+        avg_groups_sigma_x = []
+        avg_groups_sigma_y = []
+        for spot in image.groups:
+            new_spot_stat = GroupStats(spot)
+            avg_groups_sigma_x.append(new_spot_stat.spot_avg_sigma_x_pos_full)
+            avg_groups_sigma_y.append(new_spot_stat.spot_avg_sigma_y_pos_full)
+            avg_groups_sigma_z.append(new_spot_stat.spot_avg_sigma_z)
+        return [avg_groups_sigma_x, avg_groups_sigma_y, avg_groups_sigma_z]
 
     @staticmethod
     def add_peak_sigma(image: Image):
@@ -54,17 +53,17 @@ class ImgStats:
         sigma_x = []
         sigma_y = []
         sigma_z = []
-        for spot in image.spots:
-            spot_stats = SpotStats(spot=spot)
-            sigma_x += spot_stats.list_peak_sigma_x(spot=spot)
-            sigma_y += spot_stats.list_peak_sigma_y(spot=spot)
-            sigma_z += spot_stats.list_peak_sigma_z(spot=spot)
+        for spot in image.groups:
+            spot_stats = GroupStats(spot=spot)
+            sigma_x += spot_stats.list_peak_sigma_x(group=spot)
+            sigma_y += spot_stats.list_peak_sigma_y(group=spot)
+            sigma_z += spot_stats.list_peak_sigma_z(group=spot)
         return [sigma_x, sigma_y, sigma_z]
 
     @staticmethod
     def peaks_per_spot(image: Image):
         peaks_in_spots = []
-        for spot in image.spots:
+        for spot in image.groups:
             peaks_in_spots.append(len(spot))
         return peaks_in_spots
 
@@ -172,7 +171,7 @@ class ImgStats:
             plt.show()
         plt.close()
 
-    #todo add draw sigma to upper function
+    # todo add draw sigma to upper function
     def plot_peak_sigma_z(self, sigma_z, save=False, outdir=None, draw_sigma=15):
         plt.figure(figsize=Figsize)
         plt.hist(sigma_z, 50, facecolor=Facecolor, alpha=Alpha)
@@ -230,7 +229,7 @@ class ImgStats:
             plt.show()
         plt.close()
 
-    def plot_peaks_per_spot_histogram(self, image: Image, save=False, outdir=None):
+    def plot_peaks_per_group_histogram(self, image: Image, save=False, outdir=None):
         plt.figure(figsize=Figsize)
         data = self.peaks_per_spot(image=image)
         plt.hist(data, 50, facecolor=Facecolor, alpha=Alpha)
@@ -247,7 +246,7 @@ class ImgStats:
             plt.show()
         plt.close()
 
-    def plot_photons_per_spot(self, save=False, outdir=None):
+    def plot_photons_per_group(self, save=False, outdir=None):
         plt.figure(figsize=Figsize)
         plt.hist(self.photons_per_spot, 50, facecolor=Facecolor, alpha=Alpha)
         plt.ylabel('Number of Groups', fontsize=LabelFontsize)
@@ -301,75 +300,75 @@ class ImgStats:
     def photons_in_image(image: Image):
         """Return a list of number of phontons in each peak in the image"""
         photons_per_peak = []
-        for spot in image.spots:
-            photons_per_peak += SpotStats.photons(spot=spot)
+        for spot in image.groups:
+            photons_per_peak += GroupStats.photons(group=spot)
         return photons_per_peak
 
     @staticmethod
-    def average_photons_per_spot(image: Image):
+    def average_photons_per_group(image: Image):
         """Return a list of average number of photons per spot"""
         photons_per_spot = []
-        for spot in image.spots:
-            avg_photons = sum(SpotStats.photons(spot=spot)) / len(spot)
+        for spot in image.groups:
+            avg_photons = sum(GroupStats.photons(group=spot)) / len(spot)
             photons_per_spot.append(avg_photons)
         return photons_per_spot
 
 
-class SpotStats:
+class GroupStats:
 
-    def __init__(self, spot: Spot):
-        self.peak_count = len(spot.peaks)
-        self.spot_avg_sigma_x_pos_full = self.calculate_avg_sigma_x(spot)
-        self.spot_avg_sigma_y_pos_full = self.calculate_avg_sigma_y(spot)
-        self.spot_avg_sigma_z = self.calculate_avg_sigma_z(spot)
+    def __init__(self, group: Group):
+        self.peak_count = len(group.peaks)
+        self.spot_avg_sigma_x_pos_full = self.calculate_avg_sigma_x(group)
+        self.spot_avg_sigma_y_pos_full = self.calculate_avg_sigma_y(group)
+        self.spot_avg_sigma_z = self.calculate_avg_sigma_z(group)
 
-    def list_peak_sigma_x(self, spot: Spot, pixel_size=133):
+    def list_peak_sigma_x(self, group: Group, pixel_size=133):
         sigma_x = []
-        for i in spot.peaks:
+        for i in group.peaks:
             sigma_x.append(float(i.data["Sigma X Pos Full"]) * pixel_size)
         return sigma_x
 
-    def list_peak_sigma_y(self, spot: Spot, pixel_size=133):
+    def list_peak_sigma_y(self, group: Group, pixel_size=133):
         sigma_y = []
-        for i in spot.peaks:
+        for i in group.peaks:
             sigma_y.append(float(i.data["Sigma Y Pos Full"]) * pixel_size)
         return sigma_y
 
-    def list_peak_sigma_z(self, spot: Spot):
+    def list_peak_sigma_z(self, group: Group):
         sigma_z = []
-        for i in spot.peaks:
+        for i in group.peaks:
             sigma_z.append(float(i.data["Sigma Z"]))
         return sigma_z
 
     @staticmethod
-    def calculate_avg_sigma_x(spot: Spot, pixel_size=133):
+    def calculate_avg_sigma_x(group: Group, pixel_size=133):
         sum_sigma = 0
-        for i in spot.peaks:
+        for i in group.peaks:
             sum_sigma += (float(i.data["Sigma X Pos Full"]) * pixel_size)
-        avg_sigma = sum_sigma / len(spot.peaks)
+        avg_sigma = sum_sigma / len(group.peaks)
         return avg_sigma
 
     @staticmethod
-    def calculate_avg_sigma_y(spot: Spot, pixel_size=133):
+    def calculate_avg_sigma_y(group: Group, pixel_size=133):
         sum_sigma = 0
-        for i in spot.peaks:
+        for i in group.peaks:
             sum_sigma += (float(i.data["Sigma Y Pos Full"]) * pixel_size)
-        avg_sigma = sum_sigma / len(spot.peaks)
+        avg_sigma = sum_sigma / len(group.peaks)
         return avg_sigma
 
     @staticmethod
-    def calculate_avg_sigma_z(spot: Spot):
+    def calculate_avg_sigma_z(group: Group):
         sum_sigma = 0
-        for i in spot.peaks:
+        for i in group.peaks:
             sum_sigma += float(i.data["Sigma Z"])
-        avg_sigma = sum_sigma / len(spot.peaks)
+        avg_sigma = sum_sigma / len(group.peaks)
         return avg_sigma
 
     @staticmethod
-    def photons(spot: Spot):
+    def photons(group: Group):
         """"return list of number of photons per peak in given spot"""
         photons = []
-        for peak in spot.peaks:
+        for peak in group.peaks:
             photon = peak.data["6 N Photons"]
             photons.append(photon)
         return photons
@@ -399,9 +398,9 @@ class PeakPositions:
                 return None
         return peak_position
 
-    def spot_peak_positions(self, spot: Spot, sigma_threshold):
+    def spot_peak_positions(self, group: Group, sigma_threshold):
         spot_peaks_positions = []
-        for peak in spot.peaks:
+        for peak in group.peaks:
             peak_positions = self.single_peak_position(peak, sigma_threshold)
             if peak_positions:
                 spot_peaks_positions.append(peak_positions)
@@ -409,7 +408,7 @@ class PeakPositions:
 
     def image_peak_positions(self, image: Image, sigma_threshold):
         image_peaks_positions = []
-        for spot in image.spots:
+        for spot in image.groups:
             spot_peaks_positions = self.spot_peak_positions(spot, sigma_threshold)
             image_peaks_positions += spot_peaks_positions
         return np.array(image_peaks_positions)
@@ -419,53 +418,19 @@ class PeakPositions:
         self.peaks_positions[:, 0] *= pixel_size
         self.peaks_positions[:, 1] *= pixel_size
 
-    #todo replace minimize in saving pdb with this one
+    # todo replace minimize in saving pdb with this one
     def minimize_xy(self):
         minimal = np.amin(self.peaks_positions, axis=0)
         self.peaks_positions[:, 0] = self.peaks_positions[:, 0] - minimal[0]
         self.peaks_positions[:, 1] = self.peaks_positions[:, 1] - minimal[1]
         return minimal
 
-    # todo write a base for 3d plots
-    def plot_peak_position_colors(self, image: Image, ignore_singletons, title=None, outpath=None, pixel_size=133):
-        """Plot scatterplot of peak positions with different color for each spot"""
-        fig = plt.figure(figsize=(30, 15))
-        ax = Axes3D(fig)
-        ax.tick_params(axis='both', which='major', labelsize=20)
-        ax.set_xlabel("X [nm]", fontsize=25, labelpad=25)
-        ax.set_ylabel("Y [nm]", fontsize=25, labelpad=25)
-        ax.set_zlabel("Z [nm]", fontsize=25)
-        colors = cm.rainbow(np.linspace(0, 1, image.spot_count()))
-        counter = 0
-        for spot in range(len(image.spots)):
-            if ignore_singletons:
-                if len(image.spots[spot].peaks) > 1:
-                    counter += 1
-                    spot_peaks = np.array(self.spot_peak_positions(image.spots[spot]))
-                    spot_peaks[:, 0] *= pixel_size
-                    spot_peaks[:, 1] *= pixel_size
-                    ax.scatter(spot_peaks[:, 0], spot_peaks[:, 1], spot_peaks[:, 2], color=colors[spot],
-                               label="Group {}".format(str(counter)))
-            else:
-                counter += 1
-                spot_peaks = np.array(self.spot_peak_positions(image.spots[spot]))
-                spot_peaks[:, 0] *= pixel_size
-                spot_peaks[:, 1] *= pixel_size
-                ax.scatter(spot_peaks[:, 0], spot_peaks[:, 1], spot_peaks[:, 2], color=colors[spot],
-                           label="Group {}".format(str(counter)))
-        plt.legend()
-        if title:
-            plt.title(title, fontsize=25)
-        if outpath:
-            plt.savefig(outpath, dpi=300, format="png")
-        else:
-            plt.show()
-
     def plot_peak_positions(self, title=None, outpath=None):
         """Draw 3D plot of peak positions."""
         fig = plt.figure(figsize=(10, 7))
         ax = Axes3D(fig)
-        ax.scatter(self.peaks_positions[:, 0], self.peaks_positions[:, 1], self.peaks_positions[:, 2], s=20, color=Color)
+        ax.scatter(self.peaks_positions[:, 0], self.peaks_positions[:, 1], self.peaks_positions[:, 2], s=20,
+                   color=Color)
         ax.tick_params(axis='both', which='major', labelsize=12)
         ax.set_xlabel("X [nm]", fontsize=12, labelpad=5)
         ax.set_ylabel("Y [nm]", fontsize=12, labelpad=5)
@@ -482,7 +447,8 @@ class PeakPositions:
         hull = ConvexHull(self.peaks_positions)
         fig = plt.figure(figsize=(10, 7))
         ax = Axes3D(fig)
-        ax.scatter(self.peaks_positions[:, 0], self.peaks_positions[:, 1], self.peaks_positions[:, 2], s=20, color=Color)
+        ax.scatter(self.peaks_positions[:, 0], self.peaks_positions[:, 1], self.peaks_positions[:, 2], s=20,
+                   color=Color)
         ax.tick_params(axis='both', which='major', labelsize=12)
         for s in hull.simplices:
             s = np.append(s, s[0])
@@ -504,25 +470,6 @@ class PeakPositions:
         self.hull_volume = hull.volume
         self.hull_area = hull.area
 
-    # todo move voronoi to different package
-    def spherical_voronoi(self):
-        """Calculate and plot Voronoi Tesselation on peaks positions"""
-        center = np.mean(self.peaks_positions, axis=0)
-        vor = Voronoi(self.peaks_positions)
-        fig = plt.figure(figsize=(40, 20))
-        ax = fig.add_subplot(111, projection="3d")
-        ax.scatter(self.peaks_positions.T[0], self.peaks_positions.T[1], self.peaks_positions.T[2], "o")
-        ax.locator_params(tight=True, nbins=4)
-        # todo write plotting of ridge vertices. iterate over each vpair and plot a region
-        for vpair in vor.ridge_vertices:
-            print(vpair)
-            x = np.array((self.peaks_positions[vpair[0]][0], self.peaks_positions[vpair[1]][0]))
-            y = np.array((self.peaks_positions[vpair[0]][1], self.peaks_positions[vpair[1]][1]))
-            z = np.array((self.peaks_positions[vpair[0]][2], self.peaks_positions[vpair[1]][2]))
-            ax.plot(x, y, z, c='black', alpha=0.5)
-        plt.show()
-
-
 class GroupPeakStats:
 
     def __init__(self, image: Image):
@@ -535,7 +482,7 @@ class GroupPeakStats:
     @staticmethod
     def add_group_peaks(image: Image):
         group_peaks = []
-        for spot in image.spots:
+        for spot in image.groups:
             group_peaks.append(spot.group_peak)
         return group_peaks
 
@@ -561,7 +508,7 @@ class GroupPeakStats:
         return np.array(peak_positions)
 
     # -------------------------------SIGMA---------------------------------------
-    # todo group sigma histograms
+
     def groups_sigma_x(self):
         """Return a list with x sigmas for all group peaks"""
         sigmas = []
@@ -600,16 +547,12 @@ class GroupPeakStats:
 
     def minimize_group_peaks(self):
         """Move the structure to 0, 0 """
-        # modification for image 20
-        # self.positions = np.delete(self.positions, 1, 0)
         minimal = np.amin(self.positions, axis=0)
-        # print(minimal)
-        # print(self.positions)
         self.positions[:, 0] = self.positions[:, 0] - minimal[0]
         self.positions[:, 1] = self.positions[:, 1] - minimal[1]
         return minimal
 
-    #-----------------PLOTTING----------------------------------
+    # -----------------PLOTTING----------------------------------
 
     def plot_3d_group_peaks(self, title="Group Peaks", outpath=None):
         """Draw 3D plot of group peaks in XYZ space."""
@@ -628,6 +571,7 @@ class GroupPeakStats:
         else:
             plt.show()
 
+    # todo test convex hull. Is it working?
     def plot_group_peaks_convex_hull(self, title="Group Peaks Convex Hull", outpath=None, show=True):
         """Draw 3D plot of convex hull od group peaks and return the volume"""
         hull = ConvexHull(self.positions)
@@ -653,5 +597,3 @@ class GroupPeakStats:
         plt.close()
         print(hull.volume)
         print(hull.area)
-
-# todo filter by sigma?

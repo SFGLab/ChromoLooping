@@ -25,7 +25,7 @@ def main():
     reader = Reader(args.datafile)
     image = Image(reader)
     stats = ImgStats(image=image)
-    stats.add_spots_sigma(image=image)
+    stats.add_groups_sigma(image=image)
     sigmas = ImgStats.add_peak_sigma(image)
     if args.parameter == "x":
         stats.plot_sigma_x_hist()
@@ -36,7 +36,7 @@ def main():
     elif args.parameter == "avg":
         stats.plot_average_sigma()
     elif args.parameter == "peaks":
-        stats.plot_peaks_per_spot_histogram(image)
+        stats.plot_peaks_per_group_histogram(image)
     elif args.parameter == "avg_photons":
         stats.plot_photons_per_group()
     elif args.parameter == "photons":
@@ -46,7 +46,7 @@ def main():
         stats.plot_sigma_y_hist(save=True, outdir=args.outdir)
         stats.plot_sigma_z_hist(save=True, outdir=args.outdir)
         stats.plot_average_sigma(save=True, outdir=args.outdir)
-        stats.plot_peaks_per_spot_histogram(image, save=True, outdir=args.outdir)
+        stats.plot_peaks_per_group_histogram(image, save=True, outdir=args.outdir)
         stats.plot_photons_per_group(save=True, outdir=args.outdir)
         stats.plot_photons_per_peaks(save=True, outdir=args.outdir)
     elif args.parameter == "average_peaks":
