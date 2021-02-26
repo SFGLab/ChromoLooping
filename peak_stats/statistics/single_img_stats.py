@@ -27,12 +27,12 @@ Color = "red"
 class ImgStats:
 
     def __init__(self, image: Image):
-        self.spot_count = image.spot_count()
+        self.group_count = image.group_count()
         self.peak_count = image.peak_count()
-        self.avg_spots_sigma_xyz = self.add_groups_sigma(image)
-        self.avg_peaks = self.avg_peaks_per_spot(image)
+        self.avg_group_sigma_xyz = self.add_groups_sigma(image)
+        self.avg_peaks = self.avg_peaks_per_group(image)
         self.photons = self.photons_in_image(image=image)
-        self.photons_per_spot = self.average_photons_per_group(image)
+        self.photons_per_group = self.average_photons_per_group(image)
 
     @staticmethod
     def add_groups_sigma(image: Image):
@@ -40,11 +40,11 @@ class ImgStats:
         avg_groups_sigma_z = []
         avg_groups_sigma_x = []
         avg_groups_sigma_y = []
-        for spot in image.groups:
-            new_spot_stat = GroupStats(spot)
-            avg_groups_sigma_x.append(new_spot_stat.spot_avg_sigma_x_pos_full)
-            avg_groups_sigma_y.append(new_spot_stat.spot_avg_sigma_y_pos_full)
-            avg_groups_sigma_z.append(new_spot_stat.spot_avg_sigma_z)
+        for group in image.groups:
+            new_group_stat = GroupStats(group)
+            avg_groups_sigma_x.append(new_group_stat.group_avg_sigma_x_pos_full)
+            avg_groups_sigma_y.append(new_group_stat.group_avg_sigma_y_pos_full)
+            avg_groups_sigma_z.append(new_group_stat.group_avg_sigma_z)
         return [avg_groups_sigma_x, avg_groups_sigma_y, avg_groups_sigma_z]
 
     @staticmethod
@@ -53,48 +53,46 @@ class ImgStats:
         sigma_x = []
         sigma_y = []
         sigma_z = []
-        for spot in image.groups:
-            spot_stats = GroupStats(spot=spot)
-            sigma_x += spot_stats.list_peak_sigma_x(group=spot)
-            sigma_y += spot_stats.list_peak_sigma_y(group=spot)
-            sigma_z += spot_stats.list_peak_sigma_z(group=spot)
+        for group in image.groups:
+            group_stats = GroupStats(group=group)
+            sigma_x += group_stats.list_peak_sigma_x(group=group)
+            sigma_y += group_stats.list_peak_sigma_y(group=group)
+            sigma_z += group_stats.list_peak_sigma_z(group=group)
         return [sigma_x, sigma_y, sigma_z]
 
     @staticmethod
-    def peaks_per_spot(image: Image):
+    def peaks_per_group(image: Image):
         peaks_in_spots = []
         for spot in image.groups:
             peaks_in_spots.append(len(spot))
         return peaks_in_spots
 
-    def avg_peaks_per_spot(self, image: Image):
-        peaks = self.peaks_per_spot(image)
+    def avg_peaks_per_group(self, image: Image):
+        peaks = self.peaks_per_group(image)
         avg = sum(peaks) / len(peaks)
         return avg
 
     def average_sigma_x(self):
-        average_sigma_x = sum(self.avg_spots_sigma_xyz[0]) / len(self.avg_spots_sigma_xyz[0])
+        average_sigma_x = sum(self.avg_group_sigma_xyz[0]) / len(self.avg_group_sigma_xyz[0])
         return average_sigma_x
 
     def average_sigma_y(self):
-        average_sigma_y = sum(self.avg_spots_sigma_xyz[1]) / len(self.avg_spots_sigma_xyz[1])
+        average_sigma_y = sum(self.avg_group_sigma_xyz[1]) / len(self.avg_group_sigma_xyz[1])
         return average_sigma_y
 
     def average_sigma_z(self):
-        average_sigma_z = sum(self.avg_spots_sigma_xyz[2]) / len(self.avg_spots_sigma_xyz[2])
+        average_sigma_z = sum(self.avg_group_sigma_xyz[2]) / len(self.avg_group_sigma_xyz[2])
         return average_sigma_z
 
     def average_sigma(self):
-        average = (sum(self.avg_spots_sigma_xyz[2]) / len(self.avg_spots_sigma_xyz[2]) + sum(
-            self.avg_spots_sigma_xyz[1]) / len(self.avg_spots_sigma_xyz[1]) + sum(self.avg_spots_sigma_xyz[0]) / len(
-            self.avg_spots_sigma_xyz[0])) / 3
+        average = (sum(self.avg_group_sigma_xyz[2]) / len(self.avg_group_sigma_xyz[2]) + sum(
+            self.avg_group_sigma_xyz[1]) / len(self.avg_group_sigma_xyz[1]) + sum(self.avg_group_sigma_xyz[0]) / len(
+            self.avg_group_sigma_xyz[0])) / 3
         return average
-
-    # todo implement separate class for plotting - this one is already too big
 
     def plot_sigma_x_hist(self, save=False, outdir=None):
         plt.figure(figsize=Figsize)
-        plt.hist(self.avg_spots_sigma_xyz[0], 50, facecolor=Facecolor, alpha=Alpha)
+        plt.hist(self.avg_group_sigma_xyz[0], 50, facecolor=Facecolor, alpha=Alpha)
         plt.ylabel('Number of Groups', fontsize=LabelFontsize)
         plt.xlabel('Sigma X', fontsize=LabelFontsize)
         plt.title('Sigma X', fontsize=TitleFontsize)
@@ -109,7 +107,7 @@ class ImgStats:
 
     def plot_sigma_y_hist(self, save=False, outdir=None):
         plt.figure(figsize=Figsize)
-        plt.hist(self.avg_spots_sigma_xyz[1], 50, facecolor=Facecolor, alpha=Alpha)
+        plt.hist(self.avg_group_sigma_xyz[1], 50, facecolor=Facecolor, alpha=Alpha)
         plt.ylabel('Number of Groups', fontsize=LabelFontsize)
         plt.xlabel('Sigma Y', fontsize=LabelFontsize)
         plt.title('Sigma Y', fontsize=TitleFontsize)
@@ -124,7 +122,7 @@ class ImgStats:
 
     def plot_sigma_z_hist(self, save=False, outdir=None):
         plt.figure(figsize=Figsize)
-        plt.hist(self.avg_spots_sigma_xyz[2], 50, facecolor=Facecolor, alpha=Alpha)
+        plt.hist(self.avg_group_sigma_xyz[2], 50, facecolor=Facecolor, alpha=Alpha)
         plt.ylabel('Number of Groups', fontsize=LabelFontsize)
         plt.xlabel('Sigma Z', fontsize=LabelFontsize)
         plt.title('Sigma Z', fontsize=TitleFontsize)
@@ -214,7 +212,7 @@ class ImgStats:
 
     def plot_average_sigma(self, save=False, outdir=None):
         plt.figure(figsize=Figsize)
-        data = np.array(self.avg_spots_sigma_xyz)
+        data = np.array(self.avg_group_sigma_xyz)
         avg = np.average(data, axis=0)
         plt.hist(avg, 50, facecolor=Facecolor, alpha=Alpha)
         plt.ylabel('Number of Groups', fontsize=LabelFontsize)
@@ -231,7 +229,7 @@ class ImgStats:
 
     def plot_peaks_per_group_histogram(self, image: Image, save=False, outdir=None):
         plt.figure(figsize=Figsize)
-        data = self.peaks_per_spot(image=image)
+        data = self.peaks_per_group(image=image)
         plt.hist(data, 50, facecolor=Facecolor, alpha=Alpha)
         plt.ylabel('Number of Groups', fontsize=LabelFontsize)
         plt.xlabel('Number of Peaks', fontsize=LabelFontsize)
@@ -248,7 +246,7 @@ class ImgStats:
 
     def plot_photons_per_group(self, save=False, outdir=None):
         plt.figure(figsize=Figsize)
-        plt.hist(self.photons_per_spot, 50, facecolor=Facecolor, alpha=Alpha)
+        plt.hist(self.photons_per_group, 50, facecolor=Facecolor, alpha=Alpha)
         plt.ylabel('Number of Groups', fontsize=LabelFontsize)
         plt.xlabel('Average Number of Photons', fontsize=LabelFontsize)
         plt.title('Average number of photons per peak in group', fontsize=TitleFontsize)
@@ -282,9 +280,9 @@ class ImgStats:
             peaks = PeakPositions(image=image, sigma_threshold=sigma_threshold)
             groups = GroupPeakStats(image=image)
             peaks.plot_convex_hull(show=False)
-            out.write("Group Count:  {}".format(self.spot_count) + "\n")
+            out.write("Group Count:  {}".format(self.group_count) + "\n")
             out.write("Peak Count:   {}".format(self.peak_count) + "\n")
-            out.write("Average peaks per group   {}".format(self.peak_count / self.spot_count) + "\n")
+            out.write("Average peaks per group   {}".format(self.peak_count / self.group_count) + "\n")
             out.write("Average sigma X:  {} nm".format(self.average_sigma_x()) + "\n")
             out.write("Average sigma Y:  {} nm".format(self.average_sigma_y()) + "\n")
             out.write("Average sigma Z:  {} nm".format(self.average_sigma_z()) + "\n")
@@ -295,6 +293,24 @@ class ImgStats:
             out.write("Average sigma X per group peaks: {} nm".format(groups.averege_sigma_x()) + "\n")
             out.write("Average sigma Y per group peaks: {} nm".format(groups.averege_sigma_y()) + "\n")
             out.write("Average sigma Z per group peaks: {} nm".format(groups.averege_sigma_z()))
+
+    def print_statistics(self, image: Image, sigma_threshold=None):
+        peaks = PeakPositions(image=image, sigma_threshold=sigma_threshold)
+        groups = GroupPeakStats(image=image)
+        peaks.plot_convex_hull(show=False)
+        print("Group Count:  {}".format(self.group_count))
+        print("Peak Count:   {}".format(self.peak_count))
+        print("Average peaks per group   {}".format(self.peak_count / self.group_count))
+        print("Average sigma X:  {} nm".format(self.average_sigma_x()))
+        print("Average sigma Y:  {} nm".format(self.average_sigma_y()))
+        print("Average sigma Z:  {} nm".format(self.average_sigma_z()))
+        print("Convex hull volume:   {}".format(peaks.hull_volume))
+        print("Convex hull area:    {}".format(peaks.hull_area))
+        print("Average number of photons per peak:  {}".format(sum(self.photons) / len(self.photons)))
+        print("Average number of photons per group peak: {}".format(groups.average_photons()))
+        print("Average sigma X per group peaks: {} nm".format(groups.averege_sigma_x()))
+        print("Average sigma Y per group peaks: {} nm".format(groups.averege_sigma_y()))
+        print("Average sigma Z per group peaks: {} nm".format(groups.averege_sigma_z()))
 
     @staticmethod
     def photons_in_image(image: Image):
@@ -318,9 +334,9 @@ class GroupStats:
 
     def __init__(self, group: Group):
         self.peak_count = len(group.peaks)
-        self.spot_avg_sigma_x_pos_full = self.calculate_avg_sigma_x(group)
-        self.spot_avg_sigma_y_pos_full = self.calculate_avg_sigma_y(group)
-        self.spot_avg_sigma_z = self.calculate_avg_sigma_z(group)
+        self.group_avg_sigma_x_pos_full = self.calculate_avg_sigma_x(group)
+        self.group_avg_sigma_y_pos_full = self.calculate_avg_sigma_y(group)
+        self.group_avg_sigma_z = self.calculate_avg_sigma_z(group)
 
     def list_peak_sigma_x(self, group: Group, pixel_size=133):
         sigma_x = []
@@ -398,7 +414,7 @@ class PeakPositions:
                 return None
         return peak_position
 
-    def spot_peak_positions(self, group: Group, sigma_threshold):
+    def group_peak_positions(self, group: Group, sigma_threshold):
         spot_peaks_positions = []
         for peak in group.peaks:
             peak_positions = self.single_peak_position(peak, sigma_threshold)
@@ -409,7 +425,7 @@ class PeakPositions:
     def image_peak_positions(self, image: Image, sigma_threshold):
         image_peaks_positions = []
         for spot in image.groups:
-            spot_peaks_positions = self.spot_peak_positions(spot, sigma_threshold)
+            spot_peaks_positions = self.group_peak_positions(spot, sigma_threshold)
             image_peaks_positions += spot_peaks_positions
         return np.array(image_peaks_positions)
 

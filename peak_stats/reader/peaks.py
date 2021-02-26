@@ -57,7 +57,7 @@ class Image:
     def __eq__(self, other):
         return isinstance(other, Image) and self.file_path == other.file_path
 
-    def spot_count(self):
+    def group_count(self):
         return len(self.groups)
 
     def peak_count(self):
@@ -66,8 +66,8 @@ class Image:
             count += len(group)
         return count
 
-    def add_spot(self, spot):
-        self.groups.append(spot)
+    def add_group(self, group):
+        self.groups.append(group)
 
     def attributes(self):
         return self.fields
@@ -82,9 +82,9 @@ class Image:
                 return
                 # if not create a new spot and add to image
         group_peak = GroupPeak(peak=new_peak)
-        new_spot = Group(group_index=new_peak.data['18 Grouped Index'], group_peak=group_peak)
-        new_spot.add_peak(peak=new_peak)
-        self.add_spot(spot=new_spot)
+        new_group = Group(group_index=new_peak.data['18 Grouped Index'], group_peak=group_peak)
+        new_group.add_peak(peak=new_peak)
+        self.add_group(group=new_group)
         return
 
 
