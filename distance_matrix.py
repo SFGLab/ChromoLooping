@@ -16,8 +16,7 @@ def dir_exist(path_to_dir):
     return path_to_dir
 
 
-# todo verify changes
-# todo - clean this!
+# todo testing
 def main():
     parser = argparse.ArgumentParser(description="opis")
     parser.add_argument('pdb', type=str, help='PDB file or path to multiple pdb files')
@@ -31,6 +30,8 @@ def main():
                         help="Save two distance maps, one from input model, "
                              "other one from reverse model, useful for image "
                              "driven modelling, when start and end position is unknown")
+    parser.add_argument("-t", "--title", default="Distance map", help="Title of the ploted distance map. Used only if "
+                                                                      "-i is used. Default is 'Distance map'. ")
     args = parser.parse_args()
     outfiles = []
     if path.isdir(args.pdb):
@@ -40,23 +41,22 @@ def main():
                 infile = path.join(args.pdb, i)
                 if args.save:
                     outfile = path.join(args.save, i[:-4] + '.heat')
-                    outfiles.append(outfile)
-                distance_matrix(infile, outfile, reverse=False)
+                else:
+                    outfile = path.join(args.pdb, i[:-4] + '.heat')
+                outfiles.append(outfile)
+                distance_matrix(infile, outfile)
     else:
         infile = args.pdb
         if args.save:
             outfile = path.join(args.save, args.pdb[:-4] + '.heat')
         else:
             outfile = path.join(args.pdb, args.pdb[:-4] + '.heat')
-            # outfile_r = path.join(args.pdb, args.pdb[:-4] + '_reverse.heat')
         outfiles.append(outfile)
-        # outfiles.append(outfile[:-5] + '_r.heat')
-        # distance_matrix(infile, outfile)
-        distance_matrix(infile, outfile, reverse=False)
+        distance_matrix(infile, outfile)
     if args.image:
         for i in outfiles:
             heatmap = np.loadtxt(i)
-            image_outfile = i[:-5] + '_seismic.png'
+            image_outfile = f"{i[:-5]}_{args.cmap}.png"
             title = 'Distance map'
             show(heatmap, gamma=1, out_file_name=image_outfile, title=title, cmap=args.cmap)
 

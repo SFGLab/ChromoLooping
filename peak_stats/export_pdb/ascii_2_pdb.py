@@ -58,7 +58,7 @@ class Points:
          to the beginning of the coordinate system """
         peaks_per_spots = []
         peksp = PeakPositions(self.image)
-        for spot in self.image.spots:
+        for spot in self.image.groups:
             positions = np.array(peksp.spot_peak_positions(spot=spot, sigma_threshold=sigma_threshold))
             if len(positions) > 0:
                 positions[:, 0] *= pixel_size

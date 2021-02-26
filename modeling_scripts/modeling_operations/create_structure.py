@@ -5,6 +5,7 @@
 """
 from tsp_solver.greedy import solve_tsp
 import numpy as np
+import re
 
 
 def run_image_tsp(graph, points, endpoints=None, optimization_steps=10):

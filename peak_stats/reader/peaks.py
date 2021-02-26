@@ -4,6 +4,7 @@
 @author: zparteka
 """
 from peak_stats.reader.read_peaks import Reader
+
 """
 In ASCII files from PeakSelector Z position is saved in nanometers, but X and Y positions are saved in pixels and have 
 to be multiplied by pixel size.
@@ -11,9 +12,9 @@ to be multiplied by pixel size.
 
 PIXEL_SIZE = 133
 
-# todo - add some description to functions
 
 class Peak:
+    """Peak class represents a single peak from data exported from Peak Selector"""
 
     def __init__(self, data_row, header):
         self.data = {}
@@ -21,7 +22,9 @@ class Peak:
             self.data[header[i]] = float(data_row[i])
 
 
-class Spot:
+# todo - test refactoring to group
+class Group:
+    """Single group consists of at least one peak. Groups are created during grouping (clustering) procedure in PeakSelector"""
 
     def __len__(self):
         return len(self.peaks)
@@ -36,10 +39,11 @@ class Spot:
 
 
 class Image:
+    """Multiple groups form one Image. """
 
     def __init__(self, reader: Reader):
         self.fields = reader.head
-        self.spots = []
+        self.groups = []
         self.file_path = reader.path
         counter = 0
         for row in reader.lines:
@@ -53,16 +57,16 @@ class Image:
         return isinstance(other, Image) and self.file_path == other.file_path
 
     def spot_count(self):
-        return len(self.spots)
+        return len(self.groups)
 
     def peak_count(self):
         count = 0
-        for spot in self.spots:
-            count += len(spot)
+        for group in self.groups:
+            count += len(group)
         return count
 
     def add_spot(self, spot):
-        self.spots.append(spot)
+        self.groups.append(spot)
 
     def attributes(self):
         return self.fields
@@ -70,20 +74,22 @@ class Image:
     def add_peak(self, data_row, head):
         # create peak
         new_peak = Peak(data_row=data_row, header=head)
-        for i in self.spots:
+        for i in self.groups:
             # check if exists spot for this peak
             if i.group_index == new_peak.data['18 Grouped Index']:
                 i.add_peak(peak=new_peak)
                 return
                 # if not create a new spot and add to image
         group_peak = GroupPeak(peak=new_peak)
-        new_spot = Spot(group_index=new_peak.data['18 Grouped Index'], group_peak=group_peak)
+        new_spot = Group(group_index=new_peak.data['18 Grouped Index'], group_peak=group_peak)
         new_spot.add_peak(peak=new_peak)
         self.add_spot(spot=new_spot)
         return
 
 
 class GroupPeak:
+    """Single peak that represents a single group. Calculated by PeakSelector."""
+
     def __init__(self, peak: Peak):
         self.x_position = peak.data["Group X Position"] * PIXEL_SIZE
         self.y_position = peak.data["Group Y Position"] * PIXEL_SIZE
