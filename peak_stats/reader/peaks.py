@@ -24,7 +24,8 @@ class Peak:
 
 # todo - test refactoring to group
 class Group:
-    """Single group consists of at least one peak. Groups are created during grouping (clustering) procedure in PeakSelector"""
+    """Single group consists of at least one peak. Groups are created during grouping (clustering) procedure in
+    PeakSelector"""
 
     def __len__(self):
         return len(self.peaks)
