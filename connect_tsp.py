@@ -22,10 +22,9 @@ def main():
     if args.pdb.endswith(".pdb"):
         in_points = load_points(infile=args.pdb)
         graph = squareform(pdist(in_points))
-        if args.method == "greedy":
-            arranged_points = run_image_tsp(graph=graph, points=in_points, endpoints=None,
-                                            optimization_steps=args.optimization_steps)
-            save_pdb(points=arranged_points, filename=args.pdb[:-4] + "_tsp.pdb", connect=True)
+        arranged_points = run_image_tsp(graph=graph, points=in_points, endpoints=None,
+                                        optimization_steps=args.optimization_steps)
+        save_pdb(points=arranged_points, filename=args.pdb[:-4] + "_tsp.pdb", connect=True)
 
     else:
         raise Exception("Points are required to be in .pdb format.")

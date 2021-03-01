@@ -10,7 +10,7 @@ import numpy as np
 
 class Points:
 
-    def __init__(self, image: Image, sigma_threshold):
+    def __init__(self, image: Image, sigma_threshold=None):
         self.image = image
         self.points = self.all_peaks(sigma_threshold=sigma_threshold)
         self.minimal = self.minimize_xy()

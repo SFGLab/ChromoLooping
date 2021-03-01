@@ -32,7 +32,7 @@ def distance_matrix(pdb_file, save=None):
         return distances
 
 
-def show(heatmap, gamma=1, draw_x_line=None, draw_y_line=None, title=None, out_file_name=None, cmap='afmhot', ylabel=None, xlabel=None):
+def show(heatmap, gamma=1, draw_x_line=None, draw_y_line=None, title=None, out_file_name=None, cmap='afmhot', ylabel=None, xlabel=None, show_map=False):
     """Plots beautiful heatmap."""
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
@@ -55,6 +55,6 @@ def show(heatmap, gamma=1, draw_x_line=None, draw_y_line=None, title=None, out_f
     fig.subplots_adjust(bottom=0.2, left=0.2)
     if out_file_name:
         plt.savefig(out_file_name, bbox_inches='tight', dpi=300)
-    else:
+    if show_map:
         plt.show()
     plt.close()
