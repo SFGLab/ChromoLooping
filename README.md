@@ -26,4 +26,3 @@ You can use UCSF Chimera or any other viewer to visualize models and points in .
  * Calculating distance maps from 3D models
  * Distance maps visualization 
  
- ## Command line usage
