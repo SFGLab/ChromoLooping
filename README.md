@@ -1,6 +1,6 @@
 # ChromoLooping
 
-Code and data in this repository comes from publication (...)
+Code and data in this repository comes from publication _Super-resolution visualization of chromatin loop folding in human lymphoblastoid cells using interferometric photoactivated localization microscopy 
 
 You can use UCSF Chimera or any other viewer to visualize models and points in .pdb format.
  ## Getting Started
