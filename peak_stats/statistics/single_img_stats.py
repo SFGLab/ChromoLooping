@@ -22,7 +22,6 @@ Dpi = 300
 Color = "red"
 
 
-# todo introduce global parameter for pixel size
 
 class ImgStats:
 
@@ -169,7 +168,6 @@ class ImgStats:
             plt.show()
         plt.close()
 
-    # todo add draw sigma to upper function
     def plot_peak_sigma_z(self, sigma_z, save=False, outdir=None, draw_sigma=15):
         plt.figure(figsize=Figsize)
         plt.hist(sigma_z, 50, facecolor=Facecolor, alpha=Alpha)
@@ -434,7 +432,6 @@ class PeakPositions:
         self.peaks_positions[:, 0] *= pixel_size
         self.peaks_positions[:, 1] *= pixel_size
 
-    # todo replace minimize in saving pdb with this one
     def minimize_xy(self):
         minimal = np.amin(self.peaks_positions, axis=0)
         self.peaks_positions[:, 0] = self.peaks_positions[:, 0] - minimal[0]
@@ -587,7 +584,6 @@ class GroupPeakStats:
         else:
             plt.show()
 
-    # todo test convex hull. Is it working?
     def plot_group_peaks_convex_hull(self, title="Group Peaks Convex Hull", outpath=None, show=True):
         """Draw 3D plot of convex hull od group peaks and return the volume"""
         hull = ConvexHull(self.positions)

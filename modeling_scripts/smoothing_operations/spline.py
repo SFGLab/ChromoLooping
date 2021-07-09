@@ -11,7 +11,6 @@ from .distance import point_between
 import random
 
 
-# todo - removing points is not very elegant. Is there maybe a better way
 def spline(points, ref_dist=1.0, max_beads=None):
     """Performs spline interpolation out of list of points."""
     points = np.asarray(points)

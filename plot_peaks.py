@@ -8,7 +8,6 @@ from peak_stats.reader.read_peaks import Reader
 from peak_stats.reader.peaks import Image
 from peak_stats.statistics.single_img_stats import PeakPositions, GroupPeakStats
 
-# todo testing
 def main():
     parser = argparse.ArgumentParser(
         description="Plotting operations for ASCII files exported from PeakSelector")

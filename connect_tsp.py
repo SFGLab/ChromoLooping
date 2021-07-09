@@ -4,7 +4,6 @@
 @author: zparteka
 """
 
-# todo - test tsp
 import argparse
 from modeling_scripts.modeling_operations.create_structure import load_points, save_pdb
 from modeling_scripts.modeling_operations.create_structure import run_image_tsp

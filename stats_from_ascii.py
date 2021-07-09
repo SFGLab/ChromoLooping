@@ -10,7 +10,6 @@ from peak_stats.statistics.single_img_stats import ImgStats
 import argparse
 
 
-# todo - write in description which statistics are saved in text files
 def main():
     parser = argparse.ArgumentParser(
         description="Save statistics (in text file) for ipalm image peaks file exported from PeakSelector.")

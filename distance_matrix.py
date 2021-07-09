@@ -16,7 +16,6 @@ def dir_exist(path_to_dir):
     return path_to_dir
 
 
-# todo testing
 def main():
     parser = argparse.ArgumentParser(description="opis")
     parser.add_argument('pdb', type=str, help='PDB file or path to multiple pdb files')

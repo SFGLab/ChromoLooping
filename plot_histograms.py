@@ -10,15 +10,23 @@ from peak_stats.statistics.single_img_stats import ImgStats
 from peak_stats.statistics.single_img_stats import PeakPositions
 
 
-# todo - describe and fill al possible parameters
 def main():
     parser = argparse.ArgumentParser(
         description="Plot histograms for sigma parameters for X, Y, Z or average sigma for spots")
     parser.add_argument("-d", "--datafile", help="Ascii file from PeakSelector", type=str, required=True)
 
     parser.add_argument("-p", "--parameter",
-                        help="Which parameter would you like to plot a histogram from. Choose from 'x', 'y', 'z'"
-                             " 'peaks' or 'avg'. Default is x. 'all' plots and saves plots in given location",
+                        help="Which parameter would you like to plot a histogram from."
+                             "'x' - distribution of uncertainty of x positions for all peaks"
+                             "'y' - distribution of uncertainty of y positions for all peaks"
+                             "'z' - distribution of uncertainty of z positions for all peaks"
+                             "'peaks' - distribution of number of peaks in groups"
+                             "'average_peaks' - distribution of average sigma (X, Y, Z) for all peaks"
+                             "'avg' - distribution of average sigma (X, Y, Z) for all groups"
+                             "'photons' - distribution of number of photons for all peaks"
+                             "'avg_photons' - distribution of average number of photons for all groups"
+                             "'all' - saves all above plots in given location"
+                             " Default is x.",
                         default='x', type=str)
     parser.add_argument("-o", "--outdir", type=str, help="Outdir to save plots.", default=None)
     args = parser.parse_args()

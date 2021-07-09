@@ -22,7 +22,6 @@ class Peak:
             self.data[header[i]] = float(data_row[i])
 
 
-# todo - test refactoring to group
 class Group:
     """Single group consists of at least one peak. Groups are created during grouping (clustering) procedure in
     PeakSelector"""

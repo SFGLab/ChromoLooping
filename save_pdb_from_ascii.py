@@ -12,7 +12,6 @@ from peak_stats.statistics.single_img_stats import GroupPeakStats
 from os import path
 
 
-# todo - requires testing
 def main():
     parser = argparse.ArgumentParser(
         description="Save statistics for ipalm image peaks file exported from PeakSelector")
