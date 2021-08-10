@@ -10,8 +10,8 @@ You can use UCSF Chimera or any other viewer to visualize models and points in .
  
  Requirements:
  * Python 3.6 or later
- * Jupyter Notebook
- * UCSF Chimera or other visualization software
+ * [Jupyter Notebook](https://jupyter.org/install)
+ * [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/) or other visualization software 
  
 The easiest way to run the code is to open Jupyter notebooks:
 
@@ -21,7 +21,9 @@ $ cd ChromoLooping
 $ jupyter notebook
 ```
  
- ...and select one of the two available **.ipnyb** files.
+ ...and select one of the two available **.ipnyb** files:
+ * [statistics and image data processing](https://github.com/SFGLab/ChromoLooping/blob/main/image_statistics.ipynb)
+ * [modelling pipeline](https://github.com/SFGLab/ChromoLooping/blob/main/image_driven_modeling.ipynb)
  
  The existing examples in Jupyter notebooks can also be viewed directly on GitHub.
  
