@@ -12,7 +12,9 @@ You can use UCSF Chimera or any other viewer to visualize models and points in .
  * Python 3.6 or later
  * [Jupyter Notebook](https://jupyter.org/install)
  * [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/) or other visualization software 
- 
+
+The installation on desktop computer shouldn't take longer than 30 minutes.
+
 The easiest way to run the code is to open Jupyter notebooks:
 
 ```bash
@@ -48,6 +50,8 @@ $ jupyter notebook
  * Distance maps visualization 
  
   ![image](data/readme_images/modelling_notebook_examples.png)
+  
+ This tasks do not require any heavy computations and running the examples in Jupyter notebooks shouldn't exceed 5 minutes on a standard desktop computer.
  ## Data
  The results from our work can be fully reproduced using the code from this repository. 
  
