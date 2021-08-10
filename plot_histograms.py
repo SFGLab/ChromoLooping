@@ -7,7 +7,6 @@ import argparse
 from peak_stats.reader.read_peaks import Reader
 from peak_stats.reader.peaks import Image
 from peak_stats.statistics.single_img_stats import ImgStats
-from peak_stats.statistics.single_img_stats import PeakPositions
 
 
 def main():

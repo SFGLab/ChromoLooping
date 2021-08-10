@@ -8,6 +8,7 @@ from peak_stats.reader.read_peaks import Reader
 from peak_stats.reader.peaks import Image
 from peak_stats.statistics.single_img_stats import PeakPositions, GroupPeakStats
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Plotting operations for ASCII files exported from PeakSelector")
@@ -16,7 +17,8 @@ def main():
     parser.add_argument("-c", "--convex", default=False, help="If True plot convex hull in addition to 3d peaks")
     parser.add_argument("-s", "--sigma", default=None, type=int,
                         help="Upper sigma (uncertainty) threshold for X and Y positions of the peak.")
-    parser.add_argument("-g", "--group_peaks", type=bool, default=False, help="If True plot group peaks only instead of all peaks.")
+    parser.add_argument("-g", "--group_peaks", type=bool, default=False,
+                        help="If True plot group peaks only instead of all peaks.")
     args = parser.parse_args()
     reader = Reader(args.datafile)
     image = Image(reader)
@@ -56,7 +58,6 @@ def main():
             else:
                 outpath = args.outdir
             peaks.plot_peak_positions(title="Peaks 3D plot", outpath=outpath)
-
 
 
 if __name__ == '__main__':

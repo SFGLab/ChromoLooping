@@ -13,6 +13,7 @@ You can use UCSF Chimera or any other viewer to visualize models and points in .
  * UCSF Chimera or other visualization software
  
  
+ 
  ## Jupyter Notebooks
  All examples of usage can be found in Jupyter notebooks. In notebook **image_statistics.ipynb** you can find 
  all the operations on ASCII files with image peaks exported from PeakSelector:

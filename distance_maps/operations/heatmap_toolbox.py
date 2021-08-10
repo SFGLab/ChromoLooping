@@ -6,7 +6,7 @@
 
 import matplotlib.pyplot as plt
 from matplotlib import colors
-from modeling_scripts.modeling_operations.create_structure import load_points, save_pdb
+from modeling_scripts.modeling_operations.create_structure import load_points
 import numpy as np
 import math
 
@@ -32,7 +32,8 @@ def distance_matrix(pdb_file, save=None):
         return distances
 
 
-def show(heatmap, gamma=1, draw_x_line=None, draw_y_line=None, title=None, out_file_name=None, cmap='afmhot', ylabel=None, xlabel=None, show_map=False):
+def show(heatmap, gamma=1, draw_x_line=None, draw_y_line=None, title=None, out_file_name=None, cmap='afmhot',
+         ylabel=None, xlabel=None, show_map=False):
     """Plots beautiful heatmap."""
     fig = plt.figure()
     ax1 = fig.add_subplot(111)

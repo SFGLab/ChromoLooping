@@ -4,7 +4,7 @@
 @author: zparteka
 """
 from peak_stats.reader.peaks import Image, Group, Peak
-from scipy.spatial import ConvexHull, Voronoi
+from scipy.spatial import ConvexHull
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
@@ -20,7 +20,6 @@ Dpi = 300
 
 # 3D plots global options
 Color = "red"
-
 
 
 class ImgStats:
@@ -482,6 +481,7 @@ class PeakPositions:
         print(hull.area)
         self.hull_volume = hull.volume
         self.hull_area = hull.area
+
 
 class GroupPeakStats:
 

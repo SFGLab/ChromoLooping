@@ -38,6 +38,7 @@ def spline(points, ref_dist=1.0, max_beads=None):
                 p.remove(to_remove)
     return p
 
+
 def refdist(points, beads):
     """Calculate polymer length"""
     structure_length = 0

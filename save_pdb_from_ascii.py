@@ -41,7 +41,7 @@ def main():
         pass
 
     else:
-        raise Exception("Wrong mode. Choose from: all, center, groups and peaks.")
+        raise Exception("Wrong mode. Choose from: group or peaks.")
 
 
 if __name__ == '__main__':

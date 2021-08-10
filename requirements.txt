@@ -1,6 +1,5 @@
-scipy
+scipy==1.5.4
 tsp_solver
-numpy
-tqdm
-tsp_solver
-matplotlib
+numpy>=1.19.5
+matplotlib>=3.3.4
+mpl_toolkits
